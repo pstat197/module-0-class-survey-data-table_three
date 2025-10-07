@@ -1,0 +1,52 @@
+response_id,prog.prof,prog.comf,math.prof,math.comf,stat.prof,stat.comf,updv.num,dom,do_you_have_any_preference_regarding_working_on_an_industry_project_or_a_research_lab_project,PSTAT100,PSTAT115,PSTAT120,PSTAT122,PSTAT126,PSTAT131,PSTAT160,PSTAT174,CS9,CS16,LING104,LING110,LING111,CS130,CS165,ECON145,PSTAT127,PSTAT134,CS5,rsrch
+1,adv,5,int,4,adv,5,9+,Yes,No preference,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,TRUE
+2,adv,5,int,4,adv,4,6-8,No,I'm more interested in an industry project,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,TRUE
+3,adv,4,int,4,adv,4,9+,No,I'm more interested in an industry project,0,0,1,1,0,1,0,0,1,1,0,0,0,1,1,0,0,0,0,FALSE
+4,adv,4,int,3,adv,4,9+,No,I'm more interested in an industry project,1,0,0,0,1,1,1,1,0,1,0,0,0,1,1,0,0,0,0,FALSE
+6,int,3,int,3,int,3,6-8,Yes,I'm more interested in an industry project,0,0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,TRUE
+7,int,3,adv,5,adv,5,6-8,Yes,I'm more interested in an industry project,1,0,0,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,TRUE
+8,int,3,int,3,int,3,6-8,No,I'm more interested in an industry project,0,0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+9,int,4,adv,4,adv,5,3-5,No,I'm more interested in an industry project,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,TRUE
+10,int,4,int,4,adv,4,9+,No,No preference,1,0,1,1,1,0,1,1,1,0,0,0,0,0,0,1,0,0,0,FALSE
+11,int,4,int,4,beg,3,0-2,Yes,No preference,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+12,adv,5,adv,5,adv,5,9+,Unsure,No preference,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,0,TRUE
+13,int,4,int,3,adv,4,9+,Unsure,No preference,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+14,adv,4,adv,5,adv,4,6-8,No,No preference,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,TRUE
+16,int,4,int,3,int,3,6-8,No,I'm more interested in a research lab project,0,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,0,0,TRUE
+17,int,3,adv,5,adv,5,9+,No,No preference,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+18,int,3,int,4,int,4,3-5,Yes,I'm more interested in an industry project,1,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,0,1,TRUE
+19,int,4,int,5,adv,4,9+,No,I'm more interested in a research lab project,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,TRUE
+21,int,4,int,3,adv,5,6-8,No,I'm more interested in an industry project,0,0,0,1,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,TRUE
+22,adv,5,adv,5,adv,5,9+,Yes,I'm more interested in an industry project,0,0,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,TRUE
+23,int,4,int,3,int,3,9+,Yes,I'm more interested in an industry project,0,0,1,1,1,1,1,0,1,0,1,1,1,0,0,1,1,0,0,TRUE
+24,int,5,adv,5,int,5,9+,Yes,I'm more interested in an industry project,1,0,1,0,0,0,1,0,0,1,0,0,0,1,1,0,0,1,1,FALSE
+25,adv,3,adv,5,adv,5,9+,Unsure,I am not sure quite yet but leaning towards industry at the moment,0,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,FALSE
+27,adv,3,adv,3,adv,4,9+,No,I'm more interested in an industry project,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,FALSE
+28,beg,3,beg,4,beg,3,6-8,No,I'm more interested in an industry project,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+29,adv,4,adv,5,adv,5,9+,Yes,No preference; I'd like to work on whichever project offers rigor and high impact/tangible outcomes,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,TRUE
+30,adv,5,adv,5,adv,4,9+,Unsure,I'm more interested in an industry project,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,TRUE
+31,int,3,int,4,int,4,6-8,Yes,I'm more interested in an industry project,0,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,FALSE
+32,int,4,beg,4,int,4,6-8,No,I'm more interested in an industry project,0,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,0,0,FALSE
+33,int,3,adv,4,adv,4,9+,Yes,No preference,0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,TRUE
+34,int,4,adv,5,adv,5,9+,No,I'm more interested in an industry project,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,FALSE
+35,int,4,adv,3,adv,4,9+,Yes,I'm more interested in an industry project,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,TRUE
+36,int,2,int,4,int,3,9+,Yes,I'm more interested in an industry project,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,TRUE
+37,int,3,adv,5,int,4,9+,No,No preference,1,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,FALSE
+38,int,4,int,4,int,5,3-5,No,I'm more interested in an industry project,0,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,0,0,FALSE
+39,adv,4,int,4,adv,5,6-8,Yes,I'm more interested in an industry project,0,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,0,0,TRUE
+40,int,4,int,4,beg,2,0-2,No,No preference,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,FALSE
+41,int,4,beg,3,int,3,3-5,Yes,I'm more interested in an industry project,0,1,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,TRUE
+42,int,4,adv,4,adv,4,6-8,Yes,No preference,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,TRUE
+43,int,3,adv,4,adv,4,9+,Unsure,No preference,0,0,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,FALSE
+44,adv,4,adv,5,adv,5,6-8,Yes,I'm more interested in an industry project,0,0,1,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,TRUE
+45,adv,4,int,3,int,3,6-8,No,I'm more interested in an industry project,0,0,1,0,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,FALSE
+46,adv,4,adv,3,adv,3,3-5,Unsure,I'm more interested in an industry project,0,0,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,TRUE
+47,adv,5,int,5,adv,5,9+,No,I'm more interested in an industry project,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,FALSE
+48,adv,3,adv,4,adv,4,9+,No,I'm more interested in an industry project,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,FALSE
+49,int,5,int,4,int,3,9+,Yes,No preference,1,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,TRUE
+50,int,4,adv,5,adv,4,3-5,Yes,I'm more interested in an industry project,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,TRUE
+51,int,3,adv,3,adv,3,3-5,Yes,I'm more interested in an industry project,1,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+52,adv,5,adv,4,adv,4,9+,No,I'm more interested in an industry project,0,0,1,1,1,1,0,0,1,1,0,0,0,1,0,0,0,0,0,TRUE
+55,int,4,adv,5,adv,5,9+,No,I'm more interested in an industry project,0,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,1,0,TRUE
+56,int,3,int,3,int,4,3-5,Yes,I'm more interested in an industry project,1,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,TRUE
+59,adv,5,int,4,adv,4,9+,Unsure,I'm more interested in a research lab project,1,0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,FALSE
