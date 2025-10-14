@@ -37,4 +37,58 @@ cluster_profiles <- as.data.frame(X) %>%
 cluster_profiles
 
 
+library(dplyr)
+library(tidyr)
+library(stringr)
 
+background_with_cluster_ids <- background %>%
+  mutate(cluster = km$cluster) %>%
+  group_by(cluster) %>%
+  mutate(cluster_size = n()) %>%   # size per cluster on each row
+  ungroup()
+
+prof_vars <- c("prog.prof","math.prof","stat.prof")
+comf_vars <- c("prog.comf","math.comf","stat.comf")
+
+# ---- Proficiency means (1=beg, 2=int, 3=adv) + size ----
+prof_means <- background_with_cluster_ids %>%
+  mutate(across(all_of(prof_vars),
+                ~ as.integer(factor(.x, levels = c("beg","int","adv"), ordered = TRUE)))) %>%
+  group_by(cluster) %>%
+  summarise(
+    cluster_size = n(),
+    across(all_of(prof_vars), ~ mean(.x, na.rm = TRUE)),
+    .groups = "drop"
+  )
+
+prof_means
+
+# ---- All means (proficiency + comfort) + size ----
+cluster_means_all <- background_with_cluster_ids %>%
+  mutate(across(all_of(prof_vars),
+                ~ as.integer(factor(.x, levels = c("beg","int","adv"), ordered = TRUE)))) %>%
+  group_by(cluster) %>%
+  summarise(
+    cluster_size = n(),
+    across(c(all_of(prof_vars), all_of(comf_vars)), ~ mean(.x, na.rm = TRUE)),
+    .groups = "drop"
+  ) %>%
+  relocate(cluster_size, .after = cluster)
+
+cluster_means_all
+
+library(knitr)
+
+cluster_means_all %>%
+  kable(
+    digits = 2,
+    col.names = c("Cluster",
+                  "Cluster Size",
+                  "prog.prof",
+                  "math.prof",
+                  "stat.prof",
+                  "prog.comf",
+                  "math.comf",
+                  "stat.comf"),
+    caption = "Cluster-wise Means of Proficiency and Comfort (with Cluster Sizes)"
+  )
