@@ -1,6 +1,6 @@
 ---
 title: "Analysis of class surveys"
-subtitle: "If you want a subtitle put it here"
+subtitle: "A Preliminary Exploration of Course Data and Self-Reported Proficiency"
 author: "List names here"
 date: last-modified
 published-title: "Updated"
@@ -17,13 +17,16 @@ execute:
 Use this as a template. Keep the headers and remove all other text. Overall, your report may be quite short. When it is complete, render and then push changes to your team repository.
 
 ```{r}
-# load any other packages and read data here
 library(tidyverse)
+library(logisticPCA)
+library(ggplot2)
+
+background <- read_csv('../data/background-clean.csv')
 ```
 
 ## Executive summary
 
-Write a one-paragraph abstract summarizing what you did and your findings. It need not be comprehensive; try to highlight the most important or interesting outcomes.
+We applied logistic PCA and k-means clustering to students’ course-taking patterns to explore whether the classes taken can serve as a proxy for self-reported proficiency and comfort levels. Although the results are not conclusive, the analysis revealed a meaningful structure: the clusters derived from course data align roughly with “beginner,” “intermediate,” and “advanced” groups. These clusters showed corresponding differences in reported proficiency and comfort means, suggesting that class enrollment patterns capture some of the same signal as self-assessments. While further statistical testing would be needed for definitive conclusions, the findings provide preliminary evidence that course-taking behavior may reflect underlying proficiency levels.
 
 ## Data description
 
@@ -31,65 +34,189 @@ Write a brief description of the dataset. Your description should cover how data
 
 ## Questions of interest
 
-Indicate the questions your analysis addresses. These should map one-to-one to your findings. Don't include questions you didn't answer or questions you started with and refined later. If you would rather frame them as goals or tasks rather than questions that is okay; just modify the header appropriately. However you frame what you've done, you may only have two or three items; that is fine. Provide an itemized or numbered list so that the reader can easily identify your objectives.
+We sought to understand whether students’ course-taking patterns could reveal underlying levels of proficiency and comfort, and whether those patterns might serve as a substitute for self-reports. Our analysis addressed three questions:
 
-For example:
+-   What kinds of student groupings (e.g., beginner, intermediate, advanced) emerge when clusters are formed based solely on classes taken?
 
-> *We sought to understand the relationship between coursework preparation, self-assessed technical abilities, and comfort level with technical skills. We also sought to understand whether the relationships differed depending on having had prior research experience. Our analysis addressed three questions:*
->
-> 1.  *How should the coursework histories of students in the class be ordered from less preparation to extensive preparation?*
-> 2.  *Is coursework preparation associated with increased self-assessed technical skill and comfort within the sample?*
-> 3.  *Does prior research experience appear to be a substitute for coursework preparation with respect to self-assessed technical skill and comfort?*
+-   To what extent do clusters based on classes taken resemble the patterns we see in students’ self-reported proficiency and comfort?
 
-Notice that the questions are precise but not overly technical.
+-   Can course-taking behavior be used in place of self-reports as a practical proxy for estimating students’ proficiency and comfort levels?
 
 ## Findings
 
-Summarize your results. Don't try to explain every step you took; focus instead on providing the main data analytic outputs -- tables and figures -- and explaining clearly what they show. Clarify any important decisions you made in obtaining them. You can display codes if you like but it is not necessary.
-
-## Useful tips (remove this section)
-
-Due to the visual editor, most common needs for authoring can be met using menu items in the RStudio IDE. For a comprehensive guide to Quarto, see the [documentation](https://quarto.org/docs/guide/); consult the documentation for anything you can't sort out in the IDE.
-
-### Code chunks
-
-Insert code chunks using the *Insert* drop-down menu or `ctrl + alt + I` . By default in this document, codes will not be shown but results will. If you want to change this behavior, add the chunk option `echo: true` as below.
-
 ```{r}
-#| echo: true
-my_df <- tibble(animal = c('snake', 'gecko'),
-                threatening = c(TRUE, FALSE))
+# Extract class features (cols 11–29)
+classes_df <- background %>% select(11:29)
+X <- as.matrix(classes_df)  # logisticPCA expects a matrix of 0/1
 
-my_df
+set.seed(100)
+k_fit <- 4                            # use 3–6 typically; 4 is a common start
+fit <- logisticPCA(X, k = k_fit, m = 1, main_effects = TRUE)
+
+scores <- fit$PCs                     # n × k_fit
+colnames(scores) <- paste0("PC", seq_len(ncol(scores)))
+
+# Cluster on all k_fit components for better structure
+km <- kmeans(scores, centers = 3, nstart = 50)
+
+# Plot only the first two components (projection)
+plot_df <- as.data.frame(scores[, 1:2, drop = TRUE]) %>%
+  setNames(c("PC1","PC2")) %>%
+  mutate(cluster = factor(km$cluster))
+
+ggplot(plot_df, aes(PC1, PC2, color = cluster)) +
+  geom_point(alpha = 0.8) +
+  labs(title = sprintf("Logistic PCA (k=%d) — clusters shown on PC1–PC2", k_fit),
+       color = "Cluster") +
+  theme_minimal()
 ```
 
-Code chunks will be executed in order when the document is rendered, so packages should be loaded at the very beginning of the document
-
-### Rendering tables in markdown
-
-Several functions exist for converting dataframes to markdown tables for nice display. A simple one from the `knitr` package is `knitr::kable()` .
-
 ```{r}
-my_df %>% knitr::kable()
+# Optional profiles in original class space
+cluster_profiles <- as.data.frame(X) %>%
+  mutate(cluster = km$cluster) %>%
+  group_by(cluster) %>%
+  summarise(across(everything(), mean), .groups = "drop")
+
+
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+background_with_cluster_ids <- background %>%
+  mutate(cluster = km$cluster) %>%
+  group_by(cluster) %>%
+  mutate(cluster_size = n()) %>%   # size per cluster on each row
+  ungroup()
+
+prof_vars <- c("prog.prof","math.prof","stat.prof")
+comf_vars <- c("prog.comf","math.comf","stat.comf")
+
+# ---- Proficiency means (1=beg, 2=int, 3=adv) + size ----
+prof_means <- background_with_cluster_ids %>%
+  mutate(across(all_of(prof_vars),
+                ~ as.integer(factor(.x, levels = c("beg","int","adv"), ordered = TRUE)))) %>%
+  group_by(cluster) %>%
+  summarise(
+    cluster_size = n(),
+    across(all_of(prof_vars), ~ mean(.x, na.rm = TRUE)),
+    .groups = "drop"
+  )
+
+# ---- All means (proficiency + comfort) + size ----
+cluster_means_all <- background_with_cluster_ids %>%
+  mutate(across(all_of(prof_vars),
+                ~ as.integer(factor(.x, levels = c("beg","int","adv"), ordered = TRUE)))) %>%
+  group_by(cluster) %>%
+  summarise(
+    cluster_size = n(),
+    across(c(all_of(prof_vars), all_of(comf_vars)), ~ mean(.x, na.rm = TRUE)),
+    .groups = "drop"
+  ) %>%
+  relocate(cluster_size, .after = cluster)
+
+
+library(knitr)
+
+cluster_means_all %>%
+  kable(
+    digits = 2,
+    col.names = c("Cluster",
+                  "Cluster Size",
+                  "prog.prof",
+                  "math.prof",
+                  "stat.prof",
+                  "prog.comf",
+                  "math.comf",
+                  "stat.comf"),
+    caption = "Cluster-wise Means of Proficiency and Comfort (with Cluster Sizes)"
+  )
 ```
 
-### Figures
-
-To include any figures not generated by code chunks, use *Insert \> Figure / Image* or `![CAPTION](path/file.ext)` .
-
-Most of the time code chunks producing plots will render fine. However, to adjust sizing or alignment, use the chunk options `fig-width` and `fig-height` . Captions can be added with `fig-cap` .
-
 ```{r}
-#| fig-width: 4
-#| fig-height: 3
-#| fig-align: left
-#| fig-cap: A terrible plot.
+vars <- c("prog.prof","math.prof","stat.prof","prog.comf","math.comf","stat.comf")
 
-my_df %>% 
-  ggplot(aes(x = animal, y = threatening)) + 
-  geom_col()
+####################################################################################
+# Create a graph with a line for each cluster using Z scores to show highs and lows
+####################################################################################
+
+line_df <- cluster_means_all %>%
+  select(cluster, cluster_size, all_of(vars)) %>%
+  pivot_longer(cols = all_of(vars), names_to = "variable", values_to = "mean") %>%
+  group_by(variable) %>%
+  mutate(z = (mean - mean(mean)) / sd(mean)) %>%
+  ungroup() %>%
+  mutate(variable = factor(variable, levels = vars))
+
+ggplot(line_df, aes(x = variable, y = z,
+                    group = factor(cluster), color = factor(cluster))) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(
+    title    = "Cluster profiles across proficiency & comfort (z-scores)",
+    subtitle = "Means extracted from clusters formed on class-taking data",
+    x = NULL, y = "z-score (within variable)", color = "Cluster"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_discrete(
+    labels = function(lv) {
+      sizes <- cluster_means_all$cluster_size[match(as.integer(lv),
+                                                    cluster_means_all$cluster)]
+      paste0("C", lv, " (n=", sizes, ")")
+    }
+  )
 ```
 
-### Links
+```{r}
+####################################################################################
+# Using means from clusters calculated in week2-surveys.R, create a graph with same
+# format as the previous graph.
+####################################################################################
 
-To include any hyperlinks, use `[display text](url)` .
+c1_means <- c( 2.278, 2.500, 2.722, 3.500, 3.611, 4.000)
+c2_means <- c( 2.619, 2.714, 2.952, 4.286, 4.714, 4.667)
+c3_means <- c( 2.000, 1.750, 1.750, 3.667, 3.500, 3.000)
+
+# Cluster sizes for the new analysis
+sizes_B <- c(C1 = 18, C2 = 21, C3 = 12)
+
+# ---- Build the summary table for the new analysis (call it Solution B) ----
+means_B <- rbind(c1_means, c2_means, c3_means) %>%
+  as.data.frame()
+colnames(means_B) <- vars
+means_B <- means_B %>%
+  mutate(cluster = 1:3,
+         cluster_size = c(sizes_B["C1"], sizes_B["C2"], sizes_B["C3"])) %>%
+  relocate(cluster, cluster_size)
+
+# ---- Make the z-score line plot (three lines, one per cluster) ----
+line_df_B <- means_B %>%
+  select(cluster, cluster_size, all_of(vars)) %>%
+  pivot_longer(cols = all_of(vars), names_to = "variable", values_to = "mean") %>%
+  group_by(variable) %>%
+  mutate(z = (mean - mean(mean)) / sd(mean)) %>%  # standardize within variable
+  ungroup() %>%
+  mutate(variable = factor(variable, levels = vars))
+
+ggplot(line_df_B, aes(x = variable, y = z,
+                      group = factor(cluster), color = factor(cluster))) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(
+    title    = "Cluster profiles across proficiency & comfort (z-scores)",
+    subtitle = "Means extracted from clusters formed on proficiency & comfort data",
+    x = NULL, y = "z-score (within variable)", color = "Cluster"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_discrete(
+    labels = function(lv) {
+      sizes <- means_B$cluster_size[match(as.integer(lv), means_B$cluster)]
+      paste0("C", lv, " (n=", sizes, ")")
+    }
+  )
+
+```
+
+## 
