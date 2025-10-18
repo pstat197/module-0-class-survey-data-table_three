@@ -30,7 +30,7 @@ We applied logistic PCA and k-means clustering to students’ course-taking patt
 
 ## Data description
 
-Write a brief description of the dataset. Your description should cover how data were obtained, sample characteristics, and measurements taken. It does not need to be exhaustive, but sufficiently detailed to convey a clear high-level understanding of the dataset. You can utilize bullet points or tables if you feel it would help improve clarity.
+The data that we used was obtained from class survey data. Every student who chose to share their results was an entry in the dataset. Some samples questions they had to answer were their proficiency in statistics, math and CS as well as which upper division classes they have taken. Students were also surveyed on their preferred options on what they want to do on their capstone project as well as areas in data science they would want to explore. There were 59 responses in the dataset, so the size of the data is one limitation.
 
 ## Questions of interest
 
