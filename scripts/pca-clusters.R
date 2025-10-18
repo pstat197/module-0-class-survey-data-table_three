@@ -1,50 +1,9 @@
----
-title: "Analysis of class surveys"
-subtitle: "A Preliminary Exploration of Course Data and Self-Reported Proficiency"
-author: "List names here"
-date: last-modified
-published-title: "Updated"
-editor: visual
-format: html
-code-copy: true
-execute:
-  message: false
-  warning: false
-  echo: false
-  cache: true
----
-
-Use this as a template. Keep the headers and remove all other text. Overall, your report may be quite short. When it is complete, render and then push changes to your team repository.
-
-```{r}
 library(tidyverse)
 library(logisticPCA)
 library(ggplot2)
 
-background <- read_csv('../data/background-clean.csv')
-```
+background <- read_csv('data/background-clean.csv')
 
-## Executive summary
-
-We applied logistic PCA and k-means clustering to students’ course-taking patterns to explore whether the classes taken can serve as a proxy for self-reported proficiency and comfort levels. Although the results are not conclusive, the analysis revealed a meaningful structure: the clusters derived from course data align roughly with “beginner,” “intermediate,” and “advanced” groups. These clusters showed corresponding differences in reported proficiency and comfort means, suggesting that class enrollment patterns capture some of the same signal as self-assessments. While further statistical testing would be needed for definitive conclusions, the findings provide preliminary evidence that course-taking behavior may reflect underlying proficiency levels.
-
-## Data description
-
-The data that we used was obtained from class survey data. Every student who chose to share their results was an entry in the dataset. Some samples questions they had to answer were their proficiency in statistics, math and CS as well as which upper division classes they have taken. Students were also surveyed on their preferred options on what they want to do on their capstone project as well as areas in data science they would want to explore. There were 59 responses in the dataset, so the size of the data is one limitation.
-
-## Questions of interest
-
-We sought to understand whether students’ course-taking patterns could reveal underlying levels of proficiency and comfort, and whether those patterns might serve as a substitute for self-reports. Our analysis addressed three questions:
-
--   What kinds of student groupings (e.g., beginner, intermediate, advanced) emerge when clusters are formed based solely on classes taken?
-
--   To what extent do clusters based on classes taken resemble the patterns we see in students’ self-reported proficiency and comfort?
-
--   Can course-taking behavior be used in place of self-reports as a practical proxy for estimating students’ proficiency and comfort levels?
-
-## Findings
-
-```{r}
 # Extract class features (cols 11–29)
 classes_df <- background %>% select(11:29)
 X <- as.matrix(classes_df)  # logisticPCA expects a matrix of 0/1
@@ -69,14 +28,13 @@ ggplot(plot_df, aes(PC1, PC2, color = cluster)) +
   labs(title = sprintf("Logistic PCA (k=%d) — clusters shown on PC1–PC2", k_fit),
        color = "Cluster") +
   theme_minimal()
-```
 
-```{r}
 # Optional profiles in original class space
 cluster_profiles <- as.data.frame(X) %>%
   mutate(cluster = km$cluster) %>%
   group_by(cluster) %>%
   summarise(across(everything(), mean), .groups = "drop")
+cluster_profiles
 
 
 library(dplyr)
@@ -103,6 +61,8 @@ prof_means <- background_with_cluster_ids %>%
     .groups = "drop"
   )
 
+prof_means
+
 # ---- All means (proficiency + comfort) + size ----
 cluster_means_all <- background_with_cluster_ids %>%
   mutate(across(all_of(prof_vars),
@@ -115,6 +75,7 @@ cluster_means_all <- background_with_cluster_ids %>%
   ) %>%
   relocate(cluster_size, .after = cluster)
 
+cluster_means_all
 
 library(knitr)
 
@@ -131,9 +92,7 @@ cluster_means_all %>%
                   "stat.comf"),
     caption = "Cluster-wise Means of Proficiency and Comfort (with Cluster Sizes)"
   )
-```
 
-```{r}
 vars <- c("prog.prof","math.prof","stat.prof","prog.comf","math.comf","stat.comf")
 
 ####################################################################################
@@ -152,11 +111,9 @@ ggplot(line_df, aes(x = variable, y = z,
                     group = factor(cluster), color = factor(cluster))) +
   geom_line(linewidth = 1) +
   geom_point(size = 2) +
-  labs(
-    title    = "Cluster profiles across proficiency & comfort (z-scores)",
-    subtitle = "Means extracted from clusters formed on class-taking data",
-    x = NULL, y = "z-score (within variable)", color = "Cluster"
-  ) +
+  labs(x = NULL, y = "z-score (within variable)",
+       color = "Cluster",
+       title = "Cluster profiles across proficiency & comfort (z-scores)") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_color_discrete(
@@ -166,9 +123,7 @@ ggplot(line_df, aes(x = variable, y = z,
       paste0("C", lv, " (n=", sizes, ")")
     }
   )
-```
 
-```{r}
 ####################################################################################
 # Using means from clusters calculated in week2-surveys.R, create a graph with same
 # format as the previous graph.
@@ -203,11 +158,9 @@ ggplot(line_df_B, aes(x = variable, y = z,
                       group = factor(cluster), color = factor(cluster))) +
   geom_line(linewidth = 1) +
   geom_point(size = 2) +
-  labs(
-    title    = "Cluster profiles across proficiency & comfort (z-scores)",
-    subtitle = "Means extracted from clusters formed on proficiency & comfort data",
-    x = NULL, y = "z-score (within variable)", color = "Cluster"
-  ) +
+  labs(x = NULL, y = "z-score (within variable)",
+       color = "Cluster",
+       title = "Solution B — Cluster profiles across proficiency & comfort (z-scores)") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_color_discrete(
@@ -216,7 +169,3 @@ ggplot(line_df_B, aes(x = variable, y = z,
       paste0("C", lv, " (n=", sizes, ")")
     }
   )
-
-```
-
-## 
