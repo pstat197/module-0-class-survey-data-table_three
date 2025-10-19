@@ -1,7 +1,7 @@
 ---
 title: "Analysis of class surveys"
 subtitle: "A Preliminary Exploration of Course Data and Self-Reported Proficiency"
-author: "List names here"
+author: "Jeff Loomis, Shahil Patel, Sanil Katula"
 date: last-modified
 published-title: "Updated"
 editor: visual
@@ -14,7 +14,6 @@ execute:
   cache: true
 ---
 
-Use this as a template. Keep the headers and remove all other text. Overall, your report may be quite short. When it is complete, render and then push changes to your team repository.
 
 ```{r}
 library(tidyverse)
@@ -24,9 +23,16 @@ library(ggplot2)
 background <- read_csv('../data/background-clean.csv')
 ```
 
+## Introduction
+
+This report presents an exploratory analysis of anonymized class survey data collected from PSTAT197A students.  
+The goal was to investigate whether students’ course-taking patterns — specifically, which upper-division classes they have completed — can reveal underlying proficiency and comfort levels in programming, mathematics, and statistics.  
+By applying data-reduction and clustering techniques, we aim to uncover whether objective indicators like coursework can approximate subjective self-assessments of skill.
+
 ## Executive summary
 
 We applied logistic PCA and k-means clustering to students’ course-taking patterns to explore whether the classes taken can serve as a proxy for self-reported proficiency and comfort levels. Although the results are not conclusive, the analysis revealed a meaningful structure: the clusters derived from course data align roughly with “beginner,” “intermediate,” and “advanced” groups. These clusters showed corresponding differences in reported proficiency and comfort means, suggesting that class enrollment patterns capture some of the same signal as self-assessments. While further statistical testing would be needed for definitive conclusions, the findings provide preliminary evidence that course-taking behavior may reflect underlying proficiency levels.
+
 
 ## Data description
 
@@ -44,6 +50,28 @@ We sought to understand whether students’ course-taking patterns could reveal 
 
 ## Findings
 
+The logistic PCA reduced the course data into interpretable dimensions, and the k-means clustering produced three distinct groups, visualized in the PC1–PC2 plot.  
+Clusters are moderately separated, suggesting that course-taking behavior carries real structure among respondents.
+
+The cluster summary table shows clear differences across groups:
+
+- **Cluster 1 (n ≈ 23)** had the highest comfort levels across most domains and intermediate-to-advanced self-reported proficiencies.  
+  This group likely represents students with balanced experience and confidence — possibly “intermediate–advanced” learners.  
+
+- **Cluster 2 (n ≈ 14)** reported lower comfort and lower proficiencies overall.  
+  This group aligns with “beginner” students who have taken fewer upper-division courses or are earlier in the major.  
+
+- **Cluster 3 (n ≈ 14)** tended to report high math and statistics comfort and proficiency, with somewhat lower programming confidence.  
+  This cluster appears to represent more quantitatively oriented students — “advanced” in math/statistics, but moderate in programming.
+
+The **z-score line plots** reinforce this interpretation.  
+The first plot (based on class-taking data) shows clear divergence among clusters, especially in programming comfort and statistical proficiency.  
+The second plot (based on proficiency and comfort directly) reveals similar patterns, suggesting that the clusters derived from course-taking correspond well to the self-reported measures.
+
+Together, these results suggest that students’ completed coursework provides a meaningful, though imperfect, signal of their comfort and skill levels.  
+This alignment supports the idea that objective educational data (like class history) can partially substitute for subjective self-assessments in understanding student preparedness.
+
+---
 ```{r}
 # Extract class features (cols 11–29)
 classes_df <- background %>% select(11:29)
@@ -218,5 +246,26 @@ ggplot(line_df_B, aes(x = variable, y = z,
   )
 
 ```
+
+
+## Conclusion
+
+Our analysis finds that course-taking data alone can reproduce recognizable groupings that correspond to self-reported proficiency and comfort levels.  
+Clusters based solely on which classes students have taken align broadly with beginner, intermediate, and advanced patterns.  
+While the relationships are not perfect, they demonstrate that course history captures underlying differences in experience and confidence.  
+This insight may inform advising or curriculum design, as instructors could identify students’ likely comfort zones based on their coursework patterns.
+
+
+## Limitations and Next Steps
+
+While informative, this analysis is preliminary and exploratory:
+
+- **Sample size** is modest (≈ 59 responses), which limits generalizability.  
+- **No formal significance testing** was applied; differences are descriptive, not inferential.  
+- **Potential bias** exists if the respondents differ systematically from the full student population.  
+- **Temporal effects** (e.g., course recency or year in program) were not modeled but may influence results.
+
+Future work could incorporate additional variables such as student year, GPA, or time since each course, and apply more formal validation (e.g., cross-validation or stability analysis).  
+Expanding the dataset and comparing results across sections or years would also strengthen conclusions.
 
 ## 
