@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class-Confidence Associations</title>
+<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,sans-serif;padding:24px;max-width:1000px;margin:auto} h1{margin-top:0} table{border-collapse:collapse;width:100%;margin:12px 0} th,td{border:1px solid #ddd;padding:8px} th{background:#f5f5f5;text-align:left} tr:nth-child(even){background:#fafafa} .small{color:#555;font-size:0.9em}</style>
+</head>
+<body>
+<h1>Class-Confidence Associations</h1>
+<p class="small">I compared confidence between students who took each class and those who didn't using Welch's t-test (handles unequal variances). To account for multiple comparisons within each confidence target, I applied Benjamini–Hochberg FDR and flagged classes with q≤0.15. Effect sizes are reported with Cohen's d.</p>
+<p class="small">Full results CSV: <code>results/class_confidence_associations.csv</code></p>
+<h2>Methodology</h2>
+<p>Here's what I did in plain language:</p>
+<ul>
+<li>I used our intake survey (<code>data/background-clean.csv</code>). For the proficiency columns (<code>*.prof</code>) I converted beg=0, int=1, adv=2 so we can work with numbers. Confidence columns (<code>*.comf</code>) are already numeric.</li>
+<li>I treated each course column that’s 0/1 as a 'took this class' indicator.</li>
+<li>For each course and each target (programming, math, stats), I compared the average confidence of students who took the class vs those who didn’t using <strong>Welch’s t-test</strong> (good when groups can have different variances and sizes).</li>
+<li>Because we’re testing lots of courses, I controlled the false discovery rate using <strong>Benjamini–Hochberg</strong> within each target and highlighted anything with <strong>q≤0.15</strong>.</li>
+<li>I also report <strong>Cohen’s d</strong> to show the size of the difference (≈0.2 small, ≈0.5 medium, ≈0.8 large).</li>
+</ul>
+<h2>Summary</h2>
+<p><strong>prog.comf</strong>: 1 significant class(es) at q≤0.15.</p>
+<ul>
+<li>CS16: mean_diff=0.557, q=0.110, d=0.793</li>
+</ul>
+<p><strong>math.prof</strong>: 1 significant class(es) at q≤0.15.</p>
+<ul>
+<li>PSTAT134: mean_diff=0.478, q=0.140, d=0.808</li>
+</ul>
+<p><strong>math.comf</strong>: 1 significant class(es) at q≤0.15.</p>
+<ul>
+<li>PSTAT134: mean_diff=0.900, q=0.022, d=1.244</li>
+</ul>
+<h2>Target: prog.prof</h2>
+<p>No significant positive associations at q≤0.15.</p>
+<h2>Target: prog.comf</h2>
+<table>
+<thead><tr><th>class_name</th><th>t (Welch)</th><th>p (Welch)</th><th>q (FDR, Welch)</th><th>Cohen d</th><th>mean_diff</th><th>took_mean</th><th>not_took_mean</th><th>n_took</th><th>n_not_took</th></tr></thead>
+<tbody>
+<tr><td>CS16</td><td>2.907</td><td>0.005</td><td>0.110</td><td>0.793</td><td>0.557</td><td>4.190</td><td>3.633</td><td>21</td><td>30</td></tr>
+</tbody>
+</table>
+<h2>Target: math.prof</h2>
+<table>
+<thead><tr><th>class_name</th><th>t (Welch)</th><th>p (Welch)</th><th>q (FDR, Welch)</th><th>Cohen d</th><th>mean_diff</th><th>took_mean</th><th>not_took_mean</th><th>n_took</th><th>n_not_took</th></tr></thead>
+<tbody>
+<tr><td>PSTAT134</td><td>2.518</td><td>0.035</td><td>0.140</td><td>0.808</td><td>0.478</td><td>1.833</td><td>1.356</td><td>6</td><td>45</td></tr>
+</tbody>
+</table>
+<h2>Target: math.comf</h2>
+<table>
+<thead><tr><th>class_name</th><th>t (Welch)</th><th>p (Welch)</th><th>q (FDR, Welch)</th><th>Cohen d</th><th>mean_diff</th><th>took_mean</th><th>not_took_mean</th><th>n_took</th><th>n_not_took</th></tr></thead>
+<tbody>
+<tr><td>PSTAT134</td><td>4.483</td><td>0.001</td><td>0.022</td><td>1.244</td><td>0.900</td><td>4.833</td><td>3.933</td><td>6</td><td>45</td></tr>
+</tbody>
+</table>
+<h2>Target: stat.prof</h2>
+<p>No significant positive associations at q≤0.15.</p>
+<h2>Target: stat.comf</h2>
+<p>No significant positive associations at q≤0.15.</p>
+</body>
+</html>
