@@ -5,7 +5,7 @@ author: "Jeff Loomis, Shahil Patel, Sanil Katula"
 date: last-modified
 published-title: "Updated"
 editor: visual
-format: html
+format: pdf
 code-copy: true
 execute:
   message: false
